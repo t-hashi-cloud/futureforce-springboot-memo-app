@@ -1,8 +1,12 @@
 package com.lesson.memo.controller;
 
 import java.time.LocalDateTime;
+
 import java.util.List;
 import java.util.Optional;
+
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,8 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.lesson.memo.model.Memo;
 import com.lesson.memo.repository.MemoRepository;
 
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
+import java.util.Comparator;
 
 @Controller
 @RequestMapping("/memo")
@@ -31,6 +34,7 @@ public class MemoController {
     @GetMapping
     public String list(Model model) {
         List<Memo> memos = memoRepository.findAll();
+        memos.sort(Comparator.comparing(Memo::getPriority));
         model.addAttribute("memos", memos);
         return "memo-list";
     }
@@ -38,15 +42,18 @@ public class MemoController {
     @GetMapping("/new")
     public String showForm(Model model) {
         model.addAttribute("memo", new Memo());
+        model.addAttribute("priorities", Priority.values());
         return "memo-form";
     }
+    
 
     @PostMapping("/create")
     public String create(@ModelAttribute @Valid Memo memo,
-            BindingResult result) {
+            BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "memo-form";
         }
+        
 
         memo.setCreatedAt(LocalDateTime.now());
         memo.setUpdatedAt(LocalDateTime.now());
@@ -76,6 +83,7 @@ public class MemoController {
         return memoRepository.findById(id)
                 .map(memo -> {
                     model.addAttribute("memo", memo);
+                    model.addAttribute("priorities", Priority.values());
                     return "memo-form";
                 })
                 .orElseGet(() -> {
@@ -102,11 +110,13 @@ public class MemoController {
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.memo", result);
             redirectAttributes.addFlashAttribute("memo", memo);
+            redirectAttributes.addFlashAttribute("priorities", Priority.values());
             return "redirect:/memo/edit/" + id; // editにリダイレクト
         }
 
         memoToUpdate.setTitle(memo.getTitle());
         memoToUpdate.setContent(memo.getContent());
+        memoToUpdate.setPriority(memo.getPriority());
         memoToUpdate.setUpdatedAt(LocalDateTime.now());
         memoRepository.save(memoToUpdate);
 

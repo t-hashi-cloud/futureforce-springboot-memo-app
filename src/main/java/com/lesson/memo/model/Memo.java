@@ -2,15 +2,21 @@ package com.lesson.memo.model;
 
 import java.time.LocalDateTime;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.lesson.memo.controller.Priority;//追加
+
 import lombok.Data;
+ 
 
 @Entity
 @Data
@@ -33,4 +39,9 @@ public class Memo {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
+    
+    @Enumerated(EnumType.STRING)//追記
+    private Priority priority;
+    
+    
 }
