@@ -1,4 +1,5 @@
-package com.lesson.memo.controller;
+package com.lesson.memo.model;//パッケージ宣言
+
 
 public enum Priority {
 	HIGH("高"),//HIGHはプログラムで使う　高は画面に表示させる文字

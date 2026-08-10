@@ -1,7 +1,7 @@
 package com.lesson.memo.controller;
 
 import java.time.LocalDateTime;
-
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,9 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.lesson.memo.model.Memo;
+import com.lesson.memo.model.Priority;//Priority追加
 import com.lesson.memo.repository.MemoRepository;
-
-import java.util.Comparator;
 
 @Controller
 @RequestMapping("/memo")
@@ -51,10 +50,11 @@ public class MemoController {
     public String create(@ModelAttribute @Valid Memo memo,
             BindingResult result, Model model) {
         if (result.hasErrors()) {
+        	// エラーで画面に戻る際、ラジオボタンの選択肢を再セット
+            model.addAttribute("priorities", Priority.values());
             return "memo-form";
         }
         
-
         memo.setCreatedAt(LocalDateTime.now());
         memo.setUpdatedAt(LocalDateTime.now());
         memoRepository.save(memo);
