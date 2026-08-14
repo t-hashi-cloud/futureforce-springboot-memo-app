@@ -2,15 +2,21 @@ package com.lesson.memo.model;
 
 import java.time.LocalDateTime;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.lesson.memo.model.Priority;//追加
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+ 
 
 @Entity
 @Data
@@ -33,4 +39,10 @@ public class Memo {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
+    
+    @NotNull(message = "優先度を選択してください")//
+    @Enumerated(EnumType.STRING)//追記（例: HIGH, LOW など）が、そのままDBの列に保存
+    private Priority priority;
+    
+    
 }

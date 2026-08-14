@@ -522,12 +522,12 @@ textarea {
   border-color: #000;
 }
 
-.priority-pill.high:has(.priority-radio:checked) {
+.priority-pill.high:has(.priority-radio:checked){
   background:#dc3545; color:#fff;
 }
-.priority-pill.medium:has(.priority-radio:checked) {
+.priority-pill.medium:has(.priority-radio:checked){
   background:#ffc107; color:#212529;
 }
-.priority-pill.low:has(.priority-radio:checked) {
+.priority-pill.low:has(.priority-radio:checked){
   background:#198754; color:#fff;
 }
