@@ -4,22 +4,25 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.lesson.memo.model.Memo;
 import com.lesson.memo.repository.MemoRepository;
 
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/memo")
@@ -31,6 +34,7 @@ public class MemoController {
     @GetMapping
     public String list(Model model) {
         List<Memo> memos = memoRepository.findAll();
+
         model.addAttribute("memos", memos);
         return "memo-list";
     }
@@ -38,6 +42,7 @@ public class MemoController {
     @GetMapping("/new")
     public String showForm(Model model) {
         model.addAttribute("memo", new Memo());
+
         return "memo-form";
     }
 
@@ -45,6 +50,8 @@ public class MemoController {
     public String create(@ModelAttribute @Valid Memo memo,
             BindingResult result) {
         if (result.hasErrors()) {
+        	// エラーで画面に戻る際、ラジオボタンの選択肢を再セット
+
             return "memo-form";
         }
 
@@ -76,6 +83,7 @@ public class MemoController {
         return memoRepository.findById(id)
                 .map(memo -> {
                     model.addAttribute("memo", memo);
+                   
                     return "memo-form";
                 })
                 .orElseGet(() -> {
@@ -102,11 +110,13 @@ public class MemoController {
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.memo", result);
             redirectAttributes.addFlashAttribute("memo", memo);
+         
             return "redirect:/memo/edit/" + id; // editにリダイレクト
         }
 
         memoToUpdate.setTitle(memo.getTitle());
         memoToUpdate.setContent(memo.getContent());
+       
         memoToUpdate.setUpdatedAt(LocalDateTime.now());
         memoRepository.save(memoToUpdate);
 
@@ -125,4 +135,30 @@ public class MemoController {
 
         return "redirect:/memo";
     }
+    
+    @GetMapping("/search")
+    public String search(@RequestParam(name = "keyword", required = false) String keyword, Model model) {
+        List<Memo> memos;
+        
+     // キーワードが指定されていない（nullまたは空文字）場合は全件取得
+        if (!StringUtils.hasText(keyword)) {
+        	memos = memoRepository.findAll();
+        } else {
+            // キーワードがある場合は部分一致検索
+        	memos = memoRepository.findByTitleContaining(keyword);
+        }
+     // 検索結果が0件（空）だった場合は、全件を取得し表示
+        if (memos.isEmpty()) {
+            memos = memoRepository.findAll();
+        }
+        //結果を画面に渡す
+        model.addAttribute("memos", memos);//検索にヒットした全件データ
+        model.addAttribute("keyword", keyword); // 利用者の検索ワード
+
+        return "memo-list"; 
+    }
+    
+    
+    
+    
 }
