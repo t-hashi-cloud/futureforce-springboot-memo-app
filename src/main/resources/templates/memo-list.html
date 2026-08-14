@@ -48,10 +48,10 @@
             </div>
         </div>
 
-		<div th:if="${#lists.isEmpty(memos)}" class="empty-state">
-		    <p>メモがありません</p>
-		    <a th:href="@{/memo/new}" class="btn btn-primary">新しいメモを作成</a>
-		</div>
+        <div th:if="${memos.isEmpty()}" class="empty-state">
+            <p>メモがありません</p>
+            <a th:href="@{/memo/new}" class="btn btn-primary">新しいメモを作成</a>
+        </div>
     </div>
     <script th:src="@{/js/common.js}"></script>
 </body>
