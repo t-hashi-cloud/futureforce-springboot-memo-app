@@ -150,10 +150,7 @@ public class MemoController {
             // キーワードがある場合は部分一致検索
         	memos = memoRepository.findByTitleContainingOrContentContaining(keyword, keyword);
         }
-     // 検索結果が0件（空）だった場合は、全件を取得し表示
-        if (memos.isEmpty()) {
-            memos = memoRepository.findAll();
-        }
+
         
         memos.sort(Comparator.comparing(Memo::getPriority));
         //結果を画面に渡す
