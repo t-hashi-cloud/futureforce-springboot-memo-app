@@ -11,17 +11,20 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.lesson.memo.model.Memo;
 import com.lesson.memo.model.Priority;//Priority追加
 import com.lesson.memo.repository.MemoRepository;
+
 
 @Controller
 @RequestMapping("/memo")
@@ -135,4 +138,29 @@ public class MemoController {
 
         return "redirect:/memo";
     }
+    
+    @GetMapping("/search")
+    public String search(@RequestParam(name = "keyword", required = false) String keyword, Model model) {
+        List<Memo> memos;
+        
+     // キーワードが指定されていない（nullまたは空文字）場合は全件取得
+        if (!StringUtils.hasText(keyword)) {
+        	memos = memoRepository.findAll();
+        } else {
+            // キーワードがある場合は部分一致検索
+        	memos = memoRepository.findByTitleContainingOrContentContaining(keyword, keyword);
+        }
+
+        
+        memos.sort(Comparator.comparing(Memo::getPriority));
+        //結果を画面に渡す
+        model.addAttribute("memos", memos);//検索にヒットした全件データ
+        model.addAttribute("keyword", keyword); // 利用者の検索ワード
+
+        return "memo-list"; 
+    }
+    
+    
+    
+    
 }
