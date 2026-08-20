@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	
+<head>
+<meta charset="UTF-8">
+<title>ログイン画面</title>
+</head>
+<body>
+	
+	<h1>ログイン</h1>
+	<!-- <form th:action="@{ここに送信先URL}" method="ここに送信方法"> -->
+	<form th:action="@{/admin/signin}" method="post">
+
+	    <div>
+	        <label>メールアドレス：</label>
+	        <input type="text" name="username">
+	    </div>
+	    <div>
+	        <label>パスワード：</label>
+	        <input type="password" name="password">
+	    </div>
+		<div class="button-group">
+	    	<button type="submit">ログイン</button>
+		</div>
+	</form>
+
+		<!-- 画面遷移は form ではなく a タグを使用 -->
+	<div class="button-group">
+		<a th:href="@{/admin/signup}">
+		    <button type="button">新規登録画面へ</button>
+		</a>
+	</div>
+</body>
+</html>
