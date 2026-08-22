@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	
+<head>
+<meta charset="UTF-8">
+<title>	登録画面</title>
+<style>
+    .error-message {
+        color: red;
+    }
+</style>
+</head>
+<body>
+	
+	<h1>新規登録</h1>
+	<!-- <form th:action="@{送信先URL}" th:object="${ここにController側の変数名}" method="送信方法"> -->
+	<form th:action="@{/admin/signup}" th:object="${admin}" method="post">
+	    <div>
+	        <label>姓</label>
+	        <input type="text" th:field="*{lastName}"><!--//DB紐づける -->
+			<!-- lastName というフィールドにエラーがあるか？」を判定する Thymeleaf の構文-->
+			<!--Adminクラス @NotBlank(message = "...") で設定したエラーメッセージを取得して、タグの中身（テキスト）に挿入 -->
+			<span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="error-message"></span>
+	    </div>
+		<div>
+			<label>名</label>
+		    <input type="text" th:field="*{firstName}">
+			<span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="error-message"></span>
+		</div>
+		<div>
+		    <label>メールアドレス</label>
+		    <input type="email" th:field="*{email}">
+			<span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-message"></span>
+			
+		</div>
+		<div>
+		    <label>パスワード</label>
+		    <input type="password" th:field="*{password}">
+			<span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-message"></span>
+		</div>
+		<div class="button-group">
+			<button type="submit">登録</button>
+		</div>
+	</form>
+	<!-- ログイン画面への遷移ボタン -->
+	<div class="button-group">
+		<a th:href="@{/admin/signin}">
+		    <button type="button">ログイン画面へ</button>
+		</a>
+	</div>
+
+</body>
+</html>

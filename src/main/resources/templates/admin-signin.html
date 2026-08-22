@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	
+<head>
+<meta charset="UTF-8">
+<title>ログイン画面</title>
+	<style>
+	    .error-message {
+	        color: red;
+	    }
+	</style>
+</head>
+<body>
+	
+	<h1>ログイン</h1>
+	
+	<!-- ログイン失敗時のメッセージ -->
+	<!-- 条件がtrueのときだけ、このHTMLを表示	
+		 ログインに失敗したあと、Spring Securityなどによって、
+         /admin/signin?errorのようなURLになる
+		 このURLには、errorというパラメータがある。
+		 
+		 /admin/signin
+		       ↓
+		 ログイン失敗
+		       ↓
+		 /admin/signin?error
+		       ↓
+		 param.error が存在
+		       ↓
+		 th:if が true
+		       ↓
+		 メッセージを表示、-->
+	<div th:if="${param.error}">
+	    <p class="error-message">メールアドレスまたはパスワードが正しくありません</p>
+	</div>
+	
+	
+	<!-- <form th:action="@{ここに送信先URL}" method="ここに送信方法"> -->
+	<form th:action="@{/admin/signin}" method="post">
+	    <div>
+	        <label>メールアドレス：</label>
+	        <input type="text" name="username" required><!-- 空欄だと送信をブロックし注意メッセージを出す -->
+	    </div>
+	    <div>
+	        <label>パスワード：</label>
+			<input type="password" name="password" required><!-- 空欄だと送信をブロックし注意メッセージを出す -->
+	    </div>
+		<div class="button-group">
+	    	<button type="submit">ログイン</button>
+		</div>
+	</form>
+
+		<!-- 画面遷移は form ではなく a タグを使用 -->
+	<div class="button-group">
+		<a th:href="@{/admin/signup}">
+		    <button type="button">新規登録画面へ</button>
+		</a>
+	</div>
+</body>
+</html>
