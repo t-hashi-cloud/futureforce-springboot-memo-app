@@ -31,7 +31,7 @@ public class AdminController {
     // 新規登録フォーム表示
     @GetMapping("/signup")
     public String newForm(Model model) {
-        model.addAttribute("admin", new Admin());
+        model.addAttribute("admin", new Admin());//空のフォーム用オブジェクト（DTO）
         return "admin-signup";
     }
 
@@ -41,6 +41,7 @@ public class AdminController {
             BindingResult result, Model model) {
 
         if (result.hasErrors()) {
+//        	 System.out.println("入力エラーが発生しました: " + result.getAllErrors());  // ← 動作確認
             return "admin-signup";
         }
 

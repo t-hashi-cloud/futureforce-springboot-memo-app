@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
 
 import lombok.Data;
 
@@ -17,17 +18,20 @@ public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)// IDは自動的に増加
     private Long id;
-
-    // @NotBlank(message = "姓を入力してください")
+    
+    @NotBlank(message = "姓を入力してください")
     @Column(nullable = false, length = 255)//空白NG、最大桁数（文字数）を255に指定
     private String lastName;//Javaの命名規則に従う
-
+    
+    @NotBlank(message = "名を入力してください")
     @Column(nullable = false, length = 255)//空白NG、最大桁数（文字数）を255に指定
     private String firstName;
 
+    @NotBlank(message = "メールアドレスを入力してください")
     @Column(nullable = false, length = 255, unique = true)//空白NG、最大桁数（文字数）を255に指定、UNIQUE 制約（他のレコードと値が重複することを許可しない）
     private String email;
-
+    
+    @NotBlank(message = "パスワードを入力してください")
     @Column(nullable = false, length = 255)//空白NG、最大桁数（文字数）を255に指定、service層等でPasswordEncoderによりハッシュ化した文字列を保持する
     private String password;
 
